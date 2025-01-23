@@ -1,10 +1,11 @@
 from fastapi import APIRouter, FastAPI
-from src.api.web.routers import default_router
+from src.api.web.routers import default_router, service_router
 
 
 def _build_router() -> APIRouter:
     router = APIRouter()
 
+    router.include_router(service_router, prefix="/api")
     router.include_router(default_router)
 
     return router

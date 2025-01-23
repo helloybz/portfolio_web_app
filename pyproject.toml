@@ -14,6 +14,7 @@ click = "*"
 pydantic = "*"
 loguru = "*"
 uvicorn = "*"
+python-multipart = "^0.0.20"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -59,7 +60,9 @@ build-backend = "poetry.core.masonry.api"
 
     [tool.poe.tasks.web]
     help  = "Run web app on local"
-    cmd   = "PYTHONPATH=$PYTHONPATH:/src python src/main.py web run"
+    cmd   = "python src/main.py web run"
+    env = {PYTHONPATH="${PYTHONPATH}:/src"}
+
 [tool.coverage.run]
 branch = true
 omit = ["*/main.py", "*/command.py"]
