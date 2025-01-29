@@ -69,3 +69,19 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.AWS_ECR_REPOSITORY}}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
+
+  update-version-in-chart:
+    needs: [generate-new-tag]
+    name: Update version in Helm Chart
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'SJ-YB/chart'
+          ssh-key: ${{ secrets.CHART_REPO_SSH_PRIVATE_KEY }}
+      - name: update tag
+        uses: mikefarah/yq@v4
+        with:
+          cmd: yq -i '
+                .spec.template.spec.containers[0].image = ${{ secrets.AWS_ECR_REPOSITORY}}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
+              ' applications/portfolio-deployment.yaml
