@@ -88,5 +88,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
+          git config user.name github-actions
+          git config user.email "<>"
           git commit -m "fix: image version of portfolio web api"
           git push
