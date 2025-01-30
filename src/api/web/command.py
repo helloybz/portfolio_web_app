@@ -5,11 +5,11 @@ from src.api.web.app import create_web_app
 
 
 @click.group("web")
-def web_cmd(): ...
+def web_cmd() -> None: ...
 
 
 @web_cmd.command("run")
-def run():
+def run() -> None:
     app = create_web_app()
     config = uvicorn.Config(
         app=app,

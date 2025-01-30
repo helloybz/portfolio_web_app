@@ -1,20 +1,16 @@
-from enum import IntEnum
+from typing import Self
 from pydantic import BaseModel
 
-
-class MNISTLabel(IntEnum):
-    ONE = 1
-    TWO = 2
-    THREE = 3
-    FOUR = 4
-    FIVE = 5
-    SIX = 6
-    SEVEN = 7
-    EIGHT = 8
-    NINE = 9
-    ZERO = 0
+from src.domain.vo import MNISTLabel, MNISTPrediction
 
 
 class MNISTPredictionResponseView(BaseModel):
     label: MNISTLabel
     probability: float
+
+    @classmethod
+    def from_prediction(cls, prediction: MNISTPrediction) -> Self:
+        return cls(
+            label=prediction.predicted_label,
+            probability=prediction.probability,
+        )

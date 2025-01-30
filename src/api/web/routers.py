@@ -1,10 +1,12 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from loguru import logger
 from pydantic import BaseModel
-from src.api.web.views import (
-    MNISTLabel,
-    MNISTPredictionResponseView,
-)
+from src.api.web.views import MNISTPredictionResponseView
+from src.application.mnist import MNISTPredictionApplication
+from src.container import Container
+from src.domain.service import BadFormattedImageBytes
+
+from dependency_injector.wiring import Provide, inject
 
 
 class Status(BaseModel):
@@ -26,11 +28,31 @@ service_router: APIRouter = APIRouter()
 
 
 @service_router.post("/v1/mnist-prediction")
+@inject
 async def mnist_predict_v1(
     image: UploadFile,
+    app: MNISTPredictionApplication = Depends(
+        Provide[Container.application.mnist_prediction_app]
+    ),
 ) -> MNISTPredictionResponseView:
     logger.info(image)
-    return MNISTPredictionResponseView(
-        label=MNISTLabel.ZERO,
-        probability=0.5,
+    try:
+        prediction = app.predict(
+            image_bytes=await image.read(),
+        )
+    except BadFormattedImageBytes as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=400,
+            detail="Bad formatted image bytes",
+        ) from e
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error",
+        ) from e
+
+    return MNISTPredictionResponseView.from_prediction(
+        prediction=prediction,
     )
