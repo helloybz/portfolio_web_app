@@ -68,7 +68,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.AWS_ECR_REPOSITORY}}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
+          tags: ${{ secrets.AWS_ECR_REPOSITORY }}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
 
   update-version-in-chart:
     needs: [generate-new-tag]
@@ -83,5 +83,5 @@ jobs:
         uses: mikefarah/yq@v4
         with:
           cmd: yq -i '
-                .spec.template.spec.containers[0].image = ${{ secrets.AWS_ECR_REPOSITORY}}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
-              ' applications/portfolio-deployment.yaml
+               .spec.template.spec.containers[0].image = ${{ secrets.AWS_ECR_REPOSITORY }}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
+               ' applications/portfolio-deployment.yaml
