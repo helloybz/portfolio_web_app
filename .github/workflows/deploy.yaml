@@ -71,7 +71,7 @@ jobs:
           tags: ${{ secrets.AWS_ECR_REPOSITORY }}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}
 
   update-version-in-chart:
-    needs: [generate-new-tag]
+    needs: [generate-new-tag, build-docker-and-push]
     name: Update version in Helm Chart
     runs-on: ubuntu-latest
     steps:
