@@ -17,6 +17,7 @@ uvicorn = "*"
 python-multipart = "^0.0.20"
 dependency-injector = "*"
 pydantic-settings = "*"
+msgspec = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
