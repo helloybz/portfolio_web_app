@@ -1,4 +1,4 @@
-name: Build Docker and Push to ECR
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -85,3 +85,8 @@ jobs:
           cmd: yq -i '
                .spec.template.spec.containers[0].image = "${{ secrets.AWS_ECR_REPOSITORY }}:webapi-${{ needs.generate-new-tag.outputs.new-tag }}"
                ' applications/portfolio-deployment.yaml
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "fix: image version of portfolio web api"
+          git push
