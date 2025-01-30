@@ -15,6 +15,8 @@ pydantic = "*"
 loguru = "*"
 uvicorn = "*"
 python-multipart = "^0.0.20"
+dependency-injector = "*"
+pydantic-settings = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -77,3 +79,8 @@ exclude_lines = [
 ]
 fail_under = 80
 show_missing = true
+
+[tool.mypy]
+strict = true
+incremental = false
+plugins = ["pydantic.mypy"]
